@@ -1,5 +1,6 @@
 package com.example.sibsutisschedule.screens.welcome
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,22 +26,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sibsutisschedule.R
 import com.example.sibsutisschedule.data.group.Group
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WelcomeScreen(
-    state: WelcomeState,
-    onEvent: (WelcomeEvent) -> Unit
+    state: WelcomeState, onEvent: (WelcomeEvent) -> Unit
 ) {
     Scaffold(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-    ) { paddingValues ->
-        val e = paddingValues
+        modifier = Modifier.background(MaterialTheme.colorScheme.background)
+    ) { _ ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -48,18 +48,12 @@ fun WelcomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("Выберите свою группу", fontSize = 20.sp)
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
+            Text(stringResource(R.string.group_choose_title), fontSize = 20.sp)
+            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 maxLines = 1,
                 value = state.groupName,
-                onValueChange = { onEvent(WelcomeEvent.GroupNameChanged(it)) }
-            )
-            LazyColumn(
-                modifier = Modifier
-                    .padding(paddingValues)
-            ) {
+                onValueChange = { onEvent(WelcomeEvent.GroupNameChanged(it)) })
+            LazyColumn {
                 items(state.groups) {
                     GroupItem(onEvent, group = it)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -71,39 +65,22 @@ fun WelcomeScreen(
 
 @Composable
 fun GroupItem(
-    onEvent: (WelcomeEvent) -> Unit,
-    group: Group
+    onEvent: (WelcomeEvent) -> Unit, group: Group
 ) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .clickable {
             onEvent(WelcomeEvent.GroupSelected(group))
-        }
-    ) {
+        }) {
         Row(
-            modifier = Modifier
-                .padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.AccountBox, contentDescription = "null")
+            Icon(Icons.Default.AccountBox, contentDescription = "Group icon")
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = group.name.uppercase(),
-                fontSize = 15.sp
+                text = group.name.uppercase(), fontSize = 15.sp
             )
         }
 
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun WelcomeScreenPreview() {
-    val state = WelcomeState().copy(
-        groupName = "ип-",
-        groups = (1..50).map {
-            Group(id = (100 + it).toLong(), name = "ип-216")
-        }
-    )
-    WelcomeScreen(state = state, onEvent = {})
 }
