@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Sibsutis Schedule</string>
+    <string name="group_choose_title">Выберите группу</string>
 </resources>
