@@ -24,11 +24,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.sibsutisschedule.R
 import com.example.sibsutisschedule.data.group.Group
 
@@ -36,8 +39,11 @@ import com.example.sibsutisschedule.data.group.Group
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WelcomeScreen(
-    state: WelcomeState, onEvent: (WelcomeEvent) -> Unit
+    navHostController: NavHostController,
+    viewModel: WelcomeViewModel = hiltViewModel(),
 ) {
+    val state = viewModel.state.collectAsState()
+
     Scaffold(
         modifier = Modifier.background(MaterialTheme.colorScheme.background)
     ) { _ ->
@@ -51,11 +57,11 @@ fun WelcomeScreen(
             Text(stringResource(R.string.group_choose_title), fontSize = 20.sp)
             OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 maxLines = 1,
-                value = state.groupName,
-                onValueChange = { onEvent(WelcomeEvent.GroupNameChanged(it)) })
+                value = state.value.groupName,
+                onValueChange = viewModel::onGroupNameChanged)
             LazyColumn {
-                items(state.groups) {
-                    GroupItem(onEvent, group = it)
+                items(state.value.groups) {
+                    GroupItem(viewModel::onGroupSelected, group = it)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -65,12 +71,12 @@ fun WelcomeScreen(
 
 @Composable
 fun GroupItem(
-    onEvent: (WelcomeEvent) -> Unit, group: Group
+    onSelect: () -> Unit, group: Group
 ) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .clickable {
-            onEvent(WelcomeEvent.GroupSelected(group))
+            onSelect()
         }) {
         Row(
             modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically
