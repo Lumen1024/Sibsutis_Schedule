@@ -8,7 +8,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.sibsutisschedule.screens.schedule.ScheduleEvent
 import com.example.sibsutisschedule.screens.schedule.ScheduleState
 
@@ -25,21 +24,12 @@ fun ScheduleScreen(
                 .padding(it)
                 .fillMaxSize()
         ) {
-            WeekDaySelectRow()
-            DaySchedule()
+            //WeekDaySelectRow()
+            //DaySchedule()
         }
     }
 }
 
 enum class MyColors(val color: Color) {
     Red(Color.Red), Green(Color.Green), Blue(Color.Blue)
-}
-
-@Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
-@Composable
-fun SchedulePreview() {
-    val state = ScheduleState(
-
-    )
-    ScheduleScreen(state = ScheduleState(), onEvent = {})
 }
